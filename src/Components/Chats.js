@@ -23,7 +23,7 @@ function Chats() {
         <div className='Advertisement'>
             <Slider {...settings}>
                 <div>
-                    <img src="/AD1.jpg" alt="Advertisement 1"/>
+                    <img src="https://raw.githubusercontent.com/SHREYAS-NAIR/base/main/src/pics/AD1.jpg alt="Advertisement 1"/>
                 </div>
                 <div>
                     <img src="https://raw.githubusercontent.com/SHREYAS-NAIR/Fraud-Detection/master/AD1.jpg" alt="Advertisement 2"/>
