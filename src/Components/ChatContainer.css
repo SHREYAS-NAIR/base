@@ -1,0 +1,64 @@
+button{
+    padding: 0px;
+    margin: 0px;
+}
+
+.ChatConatainer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  margin: auto;
+  background-color: whites;
+}
+
+.Header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  background-color: white;
+  padding: 10px 5px 10px 5px;
+}
+.Header label {
+  font-family: "Roboto", sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1.5;
+  color: black;
+}
+
+.HeaderButtons {
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+}
+.HeaderButtons img {
+  margin: 0px;
+  padding: 0px;
+  width: 46px;
+  height: 46px;
+}
+
+.Tabs{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.Tabs button{
+    background-color: white;
+    width: 46%;
+    height: 8vh;
+    font-size: 25px;
+    border: none;
+}
