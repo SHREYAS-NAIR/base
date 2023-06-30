@@ -3,7 +3,7 @@ import "./ChatContainer.css";
 import backSign from '../pics/backSign.png';
 import searchSign from '../pics/searchSign.png';
 import moreOptionsSign from '../pics/moreOptionsSign.png';
-import Chats from './Chats'
+import Chats from './Chats/Chats'
 import Queries from './Queries'
 
 const ChatContainer = () => {
