@@ -23,7 +23,25 @@ function ChatingPortion() {
   return (
     <div className="ChatingPortion">
       <div className="ChatDisplay">
-        {/* Display received and sent messages here */}
+        <div className="MessagesDisplayC">
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+          <div className="ReceivedMessage">Hello there</div>
+          <div className="SentMessage">Hi, how are you?</div>
+        </div>
         {uploadOpen && (
           <div className="UploadOptions">
             <div className="uploadOptionsElements">
@@ -46,7 +64,7 @@ function ChatingPortion() {
             </div>
             <div className="uploadOptionsElements">
               <button className="Element4">
-                <img className='queryimage'src={query} alt="" />
+                <img className="queryimage" src={query} alt="" />
               </button>
               <label>Query</label>
             </div>

@@ -2,6 +2,19 @@ button{
     padding: 0px;
     margin: 0px;
 }
+.ReceivedMessage {
+  background-color: #E6EAEF;
+  padding: 10px;
+  align-self: flex-start;
+  border-radius: 10px;
+}
+
+.SentMessage {
+  background-color: #E6EAEF;
+  align-self: flex-end;
+  padding: 10px;
+  border-radius: 10px;
+}
 
 .ChatConatainer {
   width: 100%;
@@ -11,6 +24,7 @@ button{
   gap: 0px;
   margin: auto;
   background-color: whites;
+  font-family: "Roboto", sans-serif;
 }
 
 .Header {

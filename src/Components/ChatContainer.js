@@ -4,7 +4,7 @@ import backSign from '../pics/backSign.png';
 import searchSign from '../pics/searchSign.png';
 import moreOptionsSign from '../pics/moreOptionsSign.png';
 import Chats from './Chats/Chats'
-import Queries from './Queries'
+import QuerieDisplay from './Queries/QueryDisplay.js'
 
 const ChatContainer = () => {
   const [activeTab, setActiveTab] = useState("chats");
@@ -42,7 +42,7 @@ const ChatContainer = () => {
           Queries
         </button>
       </div>
-      {activeTab === "chats" ? <Chats /> : <Queries />}
+      {activeTab === "chats" ? <Chats /> : <QuerieDisplay />}
     </div>
   );
 };
