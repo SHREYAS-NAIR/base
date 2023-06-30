@@ -79,7 +79,7 @@
   left: 0;
   width: 100%;
   height: fit-content;
-  min-height: 30px;
+  min-height: 100px;
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border-radius: 5px;
@@ -93,8 +93,10 @@
 @media (max-height: 500px) {
   .UploadOptions {
     position: relative;
-    top: 20%;
+    bottom: 20%;
     left: 0;
+    min-height: 100px;
+    height: fit-content;
   }
 }
 
