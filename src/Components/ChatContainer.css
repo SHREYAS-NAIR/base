@@ -3,17 +3,24 @@ button{
     margin: 0px;
 }
 .ReceivedMessage {
-  background-color: #E6EAEF;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 10px;
-  align-self: flex-start;
+  align-self: flex-start !important;
   border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .SentMessage {
-  background-color: #E6EAEF;
-  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   padding: 10px;
   border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .ChatConatainer {

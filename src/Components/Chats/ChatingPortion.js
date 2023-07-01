@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import "./ChatingPortion.css";
 import close from "../../pics/close.png";
 import uploadSign from "../../pics/upload.png";
@@ -7,15 +7,54 @@ import photo from "../../pics/photo.png";
 import video from "../../pics/video.png";
 import audio from "../../pics/audio.png";
 import query from "../../pics/query.png";
+import io from "socket.io-client";
+import ScrollToBottom from "react-scroll-to-bottom";
 
-function ChatingPortion() {
-  const [message, setMessage] = useState("");
+const socket = io.connect("http://localhost:3001");
+
+function ChatingPortion({ username, room, messageList, setMessageList }) {
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleSend = () => {
-    // handle sending the message here
+  const joinRoom = () => {
+    if (room !== "") {
+      socket.emit("join_room", room);
+    }
+  };
+
+  const handleSend = async () => {
+    console.log(username);
+    if (message !== "") {
+      const messageData = {
+        room: room,
+        messageSent: message,
+        author: username,
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
+      };
+      await socket.emit("send-message", messageData);
+      setMessageList((list) => [...list, messageData]);
+    }
     setMessage("");
   };
+
+  useEffect(() => {
+    const handleMessage = (data) => {
+      if(data.room === room) { 
+        setMessageList((list) => [...list, data]);
+      }
+    };
+  
+    socket.on("receive-message", handleMessage);
+  
+    // Cleanup function
+    return () => {
+      socket.off("receive-message", handleMessage);
+    };
+  }, [socket, room]);
+  
 
   const handleUploadOpen = () => {
     setUploadOpen(!uploadOpen);
@@ -24,23 +63,30 @@ function ChatingPortion() {
     <div className="ChatingPortion">
       <div className="ChatDisplay">
         <div className="MessagesDisplayC">
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
-          <div className="ReceivedMessage">Hello there</div>
-          <div className="SentMessage">Hi, how are you?</div>
+          <ScrollToBottom className="MessagesDisplayC">
+            {messageList.map((messageContent) => {
+              return (
+                <div
+                  className={
+                    username === messageContent.author
+                      ? "SentMessage"
+                      : "ReceivedMessage"
+                  }
+                >
+                  <div className="messageBox">
+                    <div className="message-meta">
+                      <p>{messageContent.time}</p>
+                      <p>{messageContent.author}</p>
+                    </div>
+                    <div className="message-content">
+                      <p>{messageContent.messageSent}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </ScrollToBottom>
+          <div />
         </div>
         {uploadOpen && (
           <div className="UploadOptions">
@@ -87,12 +133,23 @@ function ChatingPortion() {
           <input
             type="text"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(event) => {
+              setMessage(event.target.value);
+            }}
+            onKeyPress={(event) => {
+              event.key === "Enter" && handleSend() && joinRoom();
+            }}
             placeholder="Write a message..."
           />
         </div>
         <div className="Part2">
-          <button className="SendButton" onClick={handleSend}>
+          <button
+            className="SendButton"
+            onClick={() => {
+              handleSend();
+              joinRoom();
+            }}
+          >
             <img src={sendSign} alt="Send" />
           </button>
         </div>
