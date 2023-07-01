@@ -8,7 +8,6 @@
   align-items: center;
 }
 .MessagesDisplayQ {
-  background-color: red;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -34,3 +33,35 @@
   background-color: #E6EAEF;
   font-size: 20px;
 }
+.message-content img {
+  max-width: 200px;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.message-content video {
+  max-width: 200px;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.message-content audio {
+  max-width: 200px;
+}
+
+.message-content a {
+  color: #524C78;
+  font-weight: bold; 
+  padding: 5px; 
+  background-color: #EEE; 
+  border-radius: 5px;
+  display: inline-block;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.message-content a:active {
+  background-color: #DCD5EE; 
+}
+
+

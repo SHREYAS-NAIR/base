@@ -3,7 +3,7 @@ import "./Chats.css";
 import Advertisements from "./Advertisements";
 import ChatingPortion from "./ChatingPortion";
 
-function Chats({ username, room, messageList, setMessageList }) {
+function Chats({ username, room, messageList, setMessageList, setActiveTab, setRoom }) {
   return (
     <div className="InsideChat">
       <Advertisements />
@@ -12,6 +12,8 @@ function Chats({ username, room, messageList, setMessageList }) {
         username={username}
         messageList={messageList}
         setMessageList={setMessageList}
+        setActiveTab={setActiveTab}
+        setRoom={setRoom}
       />
     </div>
   );

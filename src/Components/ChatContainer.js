@@ -65,6 +65,8 @@ const ChatContainer = () => {
           username={userType}
           messageList={messageList}
           setMessageList={setMessageList}
+          setActiveTab={setActiveTab}
+          setRoom={setRoom}
         />
       ) : (
         <QueryDisplay

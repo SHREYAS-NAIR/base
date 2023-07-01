@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./QueryDisplay.css";
 import ScrollToBottom from "react-scroll-to-bottom";
 import uploadSign from "../../pics/upload.png";
@@ -14,6 +14,9 @@ const socket = io.connect("http://localhost:3001");
 function QueryDisplay({ username, room, queryList, setQueryList }) {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const photoInputRef = useRef();
+  const videoInputRef = useRef();
+  const audioInputRef = useRef();
 
   const joinRoom = () => {
     if (room !== "") {
@@ -28,6 +31,7 @@ function QueryDisplay({ username, room, queryList, setQueryList }) {
         room: room,
         messageSent: query,
         author: username,
+        file: null,
         time:
           new Date(Date.now()).getHours() +
           ":" +
@@ -44,6 +48,8 @@ function QueryDisplay({ username, room, queryList, setQueryList }) {
   };
 
   useEffect(() => {
+    joinRoom();
+
     const handleMessage = (data) => {
       if (data.room === room) {
         setQueryList((list) => [...list, data]);
@@ -52,15 +58,68 @@ function QueryDisplay({ username, room, queryList, setQueryList }) {
 
     socket.on("receive-message", handleMessage);
 
+    socket.on("receive-file", (data) => {
+      console.log("Received file event", data); // Add this line
+      setQueryList((list) => [
+        ...list,
+        {
+          ...data,
+          file: data.file,
+        },
+      ]);
+    });
+
     // Cleanup function
     return () => {
       socket.off("receive-message", handleMessage);
+      socket.off("receive-file");
     };
   }, [socket, room]);
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64data = reader.result;
+
+      const fileData = {
+        room: room,
+        messageSent: "Sent",
+        author: username,
+        file: base64data,
+        fileName: file.name,
+        fileType: file.type,
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
+      };
+
+      socket.emit("upload-file", fileData);
+
+      // Adding the file data to the local state so it's displayed immediately
+      setQueryList((list) => [...list, fileData]);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handlePhotoUploadClick = () => {
+    photoInputRef.current.click();
+  };
+
+  const handleVideoUploadClick = () => {
+    videoInputRef.current.click();
+  };
+
+  const handleAudioUploadClick = () => {
+    audioInputRef.current.click();
+  };
+
   return (
     <div className="QueryBox">
-      <div className="MessagesDisplayQ" style={{height:"83%"}}>
+      <div className="MessagesDisplayQ" style={{ height: "83%" }}>
         <ScrollToBottom className="MessagesDisplayQ">
           {queryList.map((messageContent) => {
             return (
@@ -78,6 +137,25 @@ function QueryDisplay({ username, room, queryList, setQueryList }) {
                   </div>
                   <div className="message-content">
                     <p>{messageContent.messageSent}</p>
+                    {messageContent.file && (
+                      <div>
+                        {messageContent.fileType.startsWith("image") ? (
+                          <div>
+                            <img src={messageContent.file} alt="" />
+                            <a
+                              href={messageContent.file}
+                              download={messageContent.fileName}
+                            >
+                              Download Image
+                            </a>
+                          </div>
+                        ) : messageContent.fileType.startsWith("video") ? (
+                          <video controls src={messageContent.file} />
+                        ) : messageContent.fileType.startsWith("audio") ? (
+                          <audio controls src={messageContent.file} />
+                        ) : null}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -87,21 +165,42 @@ function QueryDisplay({ username, room, queryList, setQueryList }) {
         {uploadOpen && (
           <div className="UploadOptions">
             <div className="uploadOptionsElements">
-              <button className="Element1">
+              <button className="Element1" onClick={handlePhotoUploadClick}>
                 <img src={photo} alt="" />
               </button>
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                ref={photoInputRef}
+                onChange={handleFileUpload}
+              />
               <label>Photos</label>
             </div>
             <div className="uploadOptionsElements">
-              <button className="Element2">
+              <button className="Element2" onClick={handleVideoUploadClick}>
                 <img src={video} alt="" />
               </button>
+              <input
+                type="file"
+                accept="video/*"
+                style={{ display: "none" }}
+                ref={videoInputRef}
+                onChange={handleFileUpload}
+              />
               <label>Video</label>
             </div>
             <div className="uploadOptionsElements">
-              <button className="Element3">
+              <button className="Element3" onClick={handleAudioUploadClick}>
                 <img src={audio} alt="" />
               </button>
+              <input
+                type="file"
+                accept="audio/*"
+                style={{ display: "none" }}
+                ref={audioInputRef}
+                onChange={handleFileUpload}
+              />
               <label>Audio</label>
             </div>
           </div>
