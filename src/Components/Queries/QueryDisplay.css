@@ -53,15 +53,61 @@
   color: #524C78;
   font-weight: bold; 
   padding: 5px; 
-  background-color: #EEE; 
   border-radius: 5px;
   display: inline-block;
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
-
+.ReplyTo{
+  display: flex;
+  flex-direction: column;
+  gap:5px;
+  width: 100%;
+  height: fit-content;
+  background-color: #CBD0D5;
+  padding: 5px;
+  border-radius: 10px;
+}
+.ReplyTo p{
+  margin: 0px;
+}
+.ReplyToHeader{
+  font-weight: bold;
+  font-size: 15px;
+}
+.ReplyToMessage{
+  font-size: 20px;
+}
+.ReplyToFile{
+  color: blue;
+}
+.Photo{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #CBD0D5;
+}
+.Video{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #CBD0D5;
+}
+.Audio{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color:#CBD0D5;
+}
 .message-content a:active {
   background-color: #DCD5EE; 
 }
+.SelectedMessage {
+  background-color: red;
+}
+
 
 

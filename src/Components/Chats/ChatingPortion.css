@@ -176,10 +176,35 @@
   margin: 5px 0px 0px 0px;
 }
 .messageBox{
+  display: flex;
+  flex-direction: column;
+  gap:5px;
   width: fit-content;
   height: fit-content;
   background-color: #E6EAEF;
   padding: 10px;
-  border-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   max-width: 230px;
+}
+.Photo{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #CBD0D5;
+}
+.Video{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #CBD0D5;
+}
+.Audio{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color:#CBD0D5;
 }

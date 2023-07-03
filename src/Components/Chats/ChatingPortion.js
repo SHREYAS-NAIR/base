@@ -25,15 +25,19 @@ function ChatingPortion({
   const photoInputRef = useRef();
   const videoInputRef = useRef();
   const audioInputRef = useRef();
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
+  const handleSelectMessage = (message) => {
+    setSelectedMessage(message);
+  };
 
   const joinRoom = () => {
     if (room !== "") {
-      socket.emit("join_room", room);
+      socket.emit("join_room", room, username);
     }
   };
 
   const handleSend = async () => {
-    console.log(username);
     if (message !== "") {
       const messageData = {
         room: room,
@@ -44,11 +48,17 @@ function ChatingPortion({
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
+        replyTo: selectedMessage,
       };
       await socket.emit("send-message", messageData);
       setMessageList((list) => [...list, messageData]);
     }
     setMessage("");
+    setSelectedMessage(null);
+  };
+
+  const handleUploadOpen = () => {
+    setUploadOpen(!uploadOpen);
   };
 
   useEffect(() => {
@@ -63,7 +73,7 @@ function ChatingPortion({
     socket.on("receive-message", handleMessage);
 
     socket.on("receive-file", (data) => {
-      console.log("Received file event", data); // Add this line
+      console.log("Received file event", data);
       setMessageList((list) => [
         ...list,
         {
@@ -80,10 +90,6 @@ function ChatingPortion({
     };
   }, [socket, room]);
 
-  const handleUploadOpen = () => {
-    setUploadOpen(!uploadOpen);
-  };
-
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -93,7 +99,7 @@ function ChatingPortion({
 
       const fileData = {
         room: room,
-        messageSent: "Sent",
+        messageSent: message || "Sent",
         author: username,
         file: base64data,
         fileName: file.name,
@@ -108,6 +114,8 @@ function ChatingPortion({
 
       // Adding the file data to the local state so it's displayed immediately
       setMessageList((list) => [...list, fileData]);
+
+      setMessage("");
     };
 
     reader.readAsDataURL(file);
@@ -133,38 +141,85 @@ function ChatingPortion({
             {messageList.map((messageContent) => {
               return (
                 <div
+                  onClick={() => handleSelectMessage(messageContent)}
                   className={
                     username === messageContent.author
                       ? "SentMessage"
                       : "ReceivedMessage"
                   }
                 >
-                  <div className="messageBox">
-                    <div className="message-meta">
-                      <p>{messageContent.time}</p>
-                      <p>{messageContent.author}</p>
-                    </div>
-                    <div className="message-content">
-                      <p>{messageContent.messageSent}</p>
-                      {messageContent.file && (
-                        <div>
-                          {messageContent.fileType.startsWith("image") ? (
-                            <div>
-                              <img src={messageContent.file} alt="" />
-                              <a
-                                href={messageContent.file}
-                                download={messageContent.fileName}
-                              >
-                                Download Image
-                              </a>
-                            </div>
-                          ) : messageContent.fileType.startsWith("video") ? (
-                            <video controls src={messageContent.file} />
-                          ) : messageContent.fileType.startsWith("audio") ? (
-                            <audio controls src={messageContent.file} />
-                          ) : null}
+                  <div>
+                    <div
+                      className={
+                        username === messageContent.author
+                          ? "sent-message-meta"
+                          : "received-message-meta"
+                      }
+                    ></div>
+                    <div className="messageBox">
+                      <div className="message-meta">
+                        <div>{messageContent.time}</div>
+                        <div>{messageContent.author}</div>
+                      </div>
+                      {messageContent.replyTo ? (
+                        <div className="ReplyTo">
+                          <p>
+                            {messageContent.replyTo ? (
+                              <div className="ReplyTo">
+                                <div className="ReplyToHeader">
+                                  <div>Reply to</div>
+                                  <div>
+                                    {messageContent.replyTo.time}{" "}
+                                    {messageContent.replyTo.author}
+                                  </div>
+                                </div>
+                                <div className="ReplyToMessage">
+                                  {'"'}{messageContent.replyTo.messageSent}{'"'}
+                                </div>
+                                {messageContent.replyTo &&
+                                  messageContent.replyTo.file && (
+                                    <div className="ReplyToFile">
+                                      Attached file:{" "}
+                                      {messageContent.replyTo.fileName}
+                                    </div>
+                                  )}
+                              </div>
+                            ) : null}
+                          </p>
                         </div>
-                      )}
+                      ) : null}
+                      <div className="message-content">
+                        <p>{messageContent.messageSent}</p>
+                        {messageContent.file && (
+                          <div>
+                            {messageContent.fileType.startsWith("image") ? (
+                              <div>
+                                <div className="Photo">
+                                  <img src={messageContent.file} alt="" />
+                                </div>
+                                <a
+                                  href={messageContent.file}
+                                  download={messageContent.fileName}
+                                >
+                                  Download Image
+                                </a>
+                              </div>
+                            ) : messageContent.fileType.startsWith("video") ? (
+                              <video
+                                className="Video"
+                                controls
+                                src={messageContent.file}
+                              />
+                            ) : messageContent.fileType.startsWith("audio") ? (
+                              <audio
+                                className="Audio"
+                                controls
+                                src={messageContent.file}
+                              />
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -217,7 +272,10 @@ function ChatingPortion({
             <div className="uploadOptionsElements">
               <button
                 className="Element4"
-                onClick={() => {setActiveTab("queries"); setRoom("2")}}
+                onClick={() => {
+                  setActiveTab("queries");
+                  setRoom("2");
+                }}
               >
                 <img className="queryimage" src={query} alt="" />
               </button>
